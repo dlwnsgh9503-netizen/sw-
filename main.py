@@ -29,9 +29,7 @@ def difficulty_score(difficulty):
 
 # 과제 종류를 점수로 바꾸는 함수
 def type_score(assignment_type):
-    if assignment_type == "시험공부":
-        return 3
-    elif assignment_type == "코딩" or assignment_type == "발표":
+    if assignment_type == "코딩" or assignment_type == "문제풀이" or assignment_type == "발표":
         return 2
     else:
         return 1
@@ -53,7 +51,7 @@ def add_assignment():
     title = input("과제명: ")
     subject = input("과목명: ")
     deadline = input("마감일(예: 2026-06-10): ")
-    assignment_type = input("과제 종류(보고서/발표/코딩/시험공부/기타): ")
+    assignment_type = input("과제 종류(발표/보고서/코딩/문제풀이/강의/기타): ")
     difficulty = input("난이도(상/중/하): ")
 
     assignment = {
