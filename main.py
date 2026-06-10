@@ -46,10 +46,10 @@ def priority_score(assignment):
     assignment_type = type_score(assignment["type"])
     detail_score = difficulty + assignment_type
 
-    if days_left < 0:
+    if days_left <= 0:
         date_score = 130
         detail_weight = 1
-    elif days_left <= 1:
+    elif days_left == 1:
         date_score = 100
         detail_weight = 1
     else:
