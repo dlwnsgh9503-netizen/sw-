@@ -1,4 +1,5 @@
 from datetime import date
+from math import log
 
 
 assignments = []
@@ -38,23 +39,24 @@ def type_score(assignment_type):
 
 
 # 우선순위를 계산하는 함수
-# 점수가 낮을수록 먼저 해야 할 과제로 보여준다.
+# 점수가 높을수록 먼저 해야 할 과제로 보여준다.
 def priority_score(assignment):
     days_left = calculate_d_day(assignment["deadline"])
     difficulty = difficulty_score(assignment["difficulty"])
     assignment_type = type_score(assignment["type"])
     detail_score = difficulty + assignment_type
 
-    if days_left <= 0:
-        return -1000 + days_left * 10 - detail_score
+    if days_left < 0:
+        date_score = 130
+        detail_weight = 1
     elif days_left <= 1:
-        return days_left * 100 - detail_score
-    elif days_left <= 3:
-        return 200 + days_left * 30 - detail_score * 2
-    elif days_left <= 7:
-        return 400 + days_left * 10 - detail_score * 4
+        date_score = 100
+        detail_weight = 1
     else:
-        return 700 + days_left * 2 - detail_score * 10
+        date_score = 80 / (days_left + 1)
+        detail_weight = log(days_left + 1) * 4
+
+    return date_score + detail_score * detail_weight
 
 
 # 새 과제를 추가하는 함수
@@ -113,7 +115,7 @@ def show_priority_assignments():
     if len(assignments) == 0:
         print("등록된 과제가 없습니다.")
     else:
-        sorted_assignments = sorted(assignments, key=priority_score)
+        sorted_assignments = sorted(assignments, key=priority_score, reverse=True)
 
         for i in range(len(sorted_assignments)):
             show_assignment(sorted_assignments[i], i + 1)
