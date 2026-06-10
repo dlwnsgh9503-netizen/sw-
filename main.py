@@ -29,20 +29,32 @@ def difficulty_score(difficulty):
 
 # 과제 종류를 점수로 바꾸는 함수
 def type_score(assignment_type):
-    if assignment_type == "코딩" or assignment_type == "문제풀이" or assignment_type == "발표":
+    if assignment_type == "발표" or assignment_type == "보고서":
+        return 3
+    elif assignment_type == "문제풀이" or assignment_type == "코딩":
         return 2
     else:
         return 1
 
 
 # 우선순위를 계산하는 함수
-# 남은 날짜가 적을수록, 난이도와 종류 점수가 높을수록 먼저 보여준다.
+# 점수가 낮을수록 먼저 해야 할 과제로 보여준다.
 def priority_score(assignment):
     days_left = calculate_d_day(assignment["deadline"])
     difficulty = difficulty_score(assignment["difficulty"])
     assignment_type = type_score(assignment["type"])
+    detail_score = difficulty + assignment_type
 
-    return days_left * 10 - difficulty - assignment_type
+    if days_left <= 0:
+        return -1000 + days_left * 10 - detail_score
+    elif days_left <= 1:
+        return days_left * 100 - detail_score
+    elif days_left <= 3:
+        return 200 + days_left * 30 - detail_score * 2
+    elif days_left <= 7:
+        return 400 + days_left * 10 - detail_score * 4
+    else:
+        return 700 + days_left * 2 - detail_score * 10
 
 
 # 새 과제를 추가하는 함수
