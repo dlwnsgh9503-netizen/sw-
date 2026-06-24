@@ -2,7 +2,43 @@ from datetime import date
 from math import log
 
 
+FILE_NAME = "assignments.txt"
 assignments = []
+
+
+# 파일에서 저장된 과제 목록을 불러오는 함수
+def load_assignments():
+    try:
+        file = open(FILE_NAME, "r", encoding="utf-8")
+
+        for line in file:
+            line = line.strip()
+            data = line.split("|")
+
+            if len(data) == 5:
+                assignment = {
+                    "title": data[0],
+                    "subject": data[1],
+                    "deadline": data[2],
+                    "type": data[3],
+                    "difficulty": data[4],
+                }
+                assignments.append(assignment)
+
+        file.close()
+    except FileNotFoundError:
+        pass
+
+
+# 현재 과제 목록을 파일에 저장하는 함수
+def save_assignments():
+    file = open(FILE_NAME, "w", encoding="utf-8")
+
+    for assignment in assignments:
+        line = assignment["title"] + "|" + assignment["subject"] + "|" + assignment["deadline"] + "|" + assignment["type"] + "|" + assignment["difficulty"]
+        file.write(line + "\n")
+
+    file.close()
 
 
 # 마감일까지 며칠 남았는지 계산하는 함수
@@ -77,7 +113,8 @@ def add_assignment():
     }
 
     assignments.append(assignment)
-    print("과제가 추가되었습니다.")
+    save_assignments()
+    print("과제가 추가되고 파일에 저장되었습니다.")
 
 
 # 과제 하나를 출력하는 함수
@@ -132,6 +169,8 @@ def show_menu():
 
 # 프로그램 시작 부분
 def main():
+    load_assignments()
+
     while True:
         show_menu()
         choice = input("메뉴 선택: ")
